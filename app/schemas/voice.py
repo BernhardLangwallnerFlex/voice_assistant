@@ -28,10 +28,18 @@ class TodoistIntent(BaseModel):
     labels: Optional[list[str]] = None
 
 
+class SlackIntent(BaseModel):
+    action: str = "send_message"
+    recipient_name: str
+    recipient_email: str
+    message: str
+
+
 class ParsedIntent(BaseModel):
-    service: str  # "calendar" | "todoist"
+    service: str  # "calendar" | "todoist" | "slack"
     calendar: Optional[CalendarIntent] = None
     todoist: Optional[TodoistIntent] = None
+    slack: Optional[SlackIntent] = None
     raw_text: str
 
 
