@@ -40,6 +40,10 @@ class ParsedIntent(BaseModel):
     calendar: Optional[CalendarIntent] = None
     todoist: Optional[TodoistIntent] = None
     slack: Optional[SlackIntent] = None
+
+
+class ParsedMultiIntent(BaseModel):
+    intents: list[ParsedIntent]
     raw_text: str
 
 
@@ -48,3 +52,8 @@ class VoiceResponse(BaseModel):
     service: str
     message: str
     details: Optional[dict] = None
+
+
+class MultiVoiceResponse(BaseModel):
+    status: str  # "success" | "partial" | "error"
+    results: list[VoiceResponse]

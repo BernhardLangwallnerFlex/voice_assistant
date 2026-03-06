@@ -29,7 +29,6 @@ def test_parsed_intent_calendar():
             start_datetime="2025-01-15T09:00:00",
             end_datetime="2025-01-15T10:00:00",
         ),
-        raw_text="Schedule team standup tomorrow at 9am",
     )
     assert intent.service == "calendar"
     assert intent.calendar.title == "Team standup"
@@ -42,11 +41,38 @@ def test_parsed_intent_todoist():
     intent = ParsedIntent(
         service="todoist",
         todoist=TodoistIntent(content="Buy groceries", due_string="tomorrow"),
-        raw_text="Remind me to buy groceries tomorrow",
     )
     assert intent.service == "todoist"
     assert intent.todoist.content == "Buy groceries"
     assert intent.calendar is None
+
+
+def test_parsed_multi_intent():
+    from app.schemas.voice import ParsedIntent, ParsedMultiIntent, SlackIntent, TodoistIntent
+
+    multi = ParsedMultiIntent(
+        intents=[
+            ParsedIntent(
+                service="slack",
+                slack=SlackIntent(
+                    recipient_name="Oscar",
+                    recipient_email="oscar@example.com",
+                    message="I will be late 5 minutes",
+                ),
+            ),
+            ParsedIntent(
+                service="todoist",
+                todoist=TodoistIntent(
+                    content="Follow up with Oscar",
+                    due_string="the day after tomorrow",
+                ),
+            ),
+        ],
+        raw_text="Send a Slack message to Oscar saying I will be late 5 minutes and set a reminder for follow up the day after tomorrow",
+    )
+    assert len(multi.intents) == 2
+    assert multi.intents[0].service == "slack"
+    assert multi.intents[1].service == "todoist"
 
 
 def test_voice_response_model():
