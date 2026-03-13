@@ -35,7 +35,7 @@ async def main():
 
         # Step 2: Send a voice command
         print("\n━━━ Step 2: Sending voice command ━━━")
-        command = "Send a slack message to myself: time for Feierabend!"
+        command = "New task: get coffee today priority 1 in project Besorgungen!"
         print(f'Command: "{command}"\n')
         resp = await client.post("/voice", json={"text": command})
         print_response(resp)

@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_db
 from app.models.user import User
-from app.schemas.voice import MultiVoiceResponse, VoiceRequest
+from app.schemas.voice import MultiVoiceResponse, VoiceRequest, VoiceResponse
 from app.services.llm import parse_voice_command
 from app.services.router import route_actions
 from app.utils.auth import get_current_user
@@ -28,6 +28,18 @@ async def handle_voice(
         raise HTTPException(
             status_code=422,
             detail="Could not parse voice command. Please try rephrasing.",
+        )
+
+    if not multi_intent.intents:
+        return MultiVoiceResponse(
+            status="success",
+            results=[
+                VoiceResponse(
+                    status="info",
+                    service="none",
+                    message="No actionable intent detected. Try keywords like 'remind me', 'schedule a meeting', or 'slack'.",
+                )
+            ],
         )
 
     return await route_actions(multi_intent, user, db)
