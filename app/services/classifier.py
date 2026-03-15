@@ -15,11 +15,16 @@ _TODOIST_PATTERNS = [
 
 # Calendar: compound rule — requires at least one action verb AND one noun
 _CALENDAR_VERBS = re.compile(
-    r"\b(?:schedule|create|book|move|block)\b", re.IGNORECASE
+    r"\b(?:schedule|create|book|move|block|set up|add)\b", re.IGNORECASE
 )
 _CALENDAR_NOUNS = re.compile(
     r"\b(?:meeting|appointment|event|call|calendar)\b", re.IGNORECASE
 )
+
+
+def _normalize(text: str) -> str:
+    """Collapse whitespace and strip, so multi-word patterns match reliably."""
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def _matches_any(text: str, patterns: list[re.Pattern]) -> bool:
@@ -36,6 +41,7 @@ def classify_intents(text: str) -> list[str]:
     Returns a list of service names detected in the text,
     e.g. ["slack", "todoist"] or ["calendar"] or [].
     """
+    text = _normalize(text)
     services = []
 
     if _matches_any(text, _SLACK_PATTERNS):

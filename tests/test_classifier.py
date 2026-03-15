@@ -68,6 +68,9 @@ def test_todoist_negative(text):
     "schedule a call with Sarah",
     "create an appointment for Monday",
     "BOOK A MEETING at noon",
+    "Set up a meeting with the team",
+    "Add this event to my calendar",
+    "add a call with Sarah to the calendar",
 ])
 def test_calendar_positive(text):
     assert "calendar" in classify_intents(text)
@@ -158,3 +161,37 @@ def test_schedule_without_noun():
 def test_calendar_noun_without_verb():
     """Calendar noun without action verb should not trigger calendar."""
     assert "calendar" not in classify_intents("The meeting went well today")
+
+
+# --- Text normalization ---
+
+def test_normalize_double_space_remind_me():
+    """Double spaces between 'remind' and 'me' should still match."""
+    assert "todoist" in classify_intents("remind  me to buy milk")
+
+
+def test_normalize_leading_trailing_whitespace():
+    assert "slack" in classify_intents("  slack Sarah hello  ")
+
+
+def test_normalize_tabs_and_newlines():
+    assert "todoist" in classify_intents("remind\tme\nto buy milk")
+
+
+# --- New calendar keywords ---
+
+def test_set_up_meeting():
+    assert "calendar" in classify_intents("Set up a meeting with Alex")
+
+
+def test_add_to_calendar():
+    assert "calendar" in classify_intents("Add this to my calendar")
+
+
+def test_add_event():
+    assert "calendar" in classify_intents("Add an event for Friday")
+
+
+def test_add_without_calendar_noun():
+    """'add' alone without a calendar noun should not trigger calendar."""
+    assert "calendar" not in classify_intents("Add this to the list")

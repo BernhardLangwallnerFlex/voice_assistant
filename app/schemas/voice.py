@@ -1,7 +1,7 @@
 from datetime import datetime
-from typing import Optional
+from typing import Literal, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 
 
 class VoiceRequest(BaseModel):
@@ -36,10 +36,25 @@ class SlackIntent(BaseModel):
 
 
 class ParsedIntent(BaseModel):
-    service: str  # "calendar" | "todoist" | "slack"
+    service: Literal["calendar", "todoist", "slack"]
     calendar: Optional[CalendarIntent] = None
     todoist: Optional[TodoistIntent] = None
     slack: Optional[SlackIntent] = None
+
+    @model_validator(mode="after")
+    def validate_service_field(self):
+        field = getattr(self, self.service)
+        if field is None:
+            raise ValueError(
+                f"service is '{self.service}' but {self.service} field is null"
+            )
+        others = {"calendar", "todoist", "slack"} - {self.service}
+        for other in others:
+            if getattr(self, other) is not None:
+                raise ValueError(
+                    f"service is '{self.service}' but {other} field is populated"
+                )
+        return self
 
 
 class ParsedMultiIntent(BaseModel):

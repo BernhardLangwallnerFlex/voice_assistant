@@ -78,6 +78,16 @@ async def _extract_intent(
         raw_json = response.choices[0].message.content
         data = json.loads(raw_json)
 
+        # Safety filter: warn on unexpected top-level keys
+        expected_keys = {"result"}
+        unexpected = set(data.keys()) - expected_keys
+        if unexpected:
+            logger.warning(
+                "LLM returned unexpected keys for %s extraction: %s",
+                service,
+                unexpected,
+            )
+
         result = data.get("result")
         if result is None:
             return None

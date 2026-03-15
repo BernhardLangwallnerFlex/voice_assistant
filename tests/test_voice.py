@@ -86,3 +86,41 @@ def test_voice_response_model():
     )
     assert resp.status == "success"
     assert resp.details["event_id"] == "123"
+
+
+def test_parsed_intent_rejects_missing_service_field():
+    """ParsedIntent should reject when service field is null."""
+    from pydantic import ValidationError
+
+    from app.schemas.voice import ParsedIntent
+
+    with pytest.raises(ValidationError, match="calendar field is null"):
+        ParsedIntent(service="calendar")
+
+
+def test_parsed_intent_rejects_wrong_field_populated():
+    """ParsedIntent should reject when a non-matching service field is populated."""
+    from pydantic import ValidationError
+
+    from app.schemas.voice import CalendarIntent, ParsedIntent, TodoistIntent
+
+    with pytest.raises(ValidationError, match="todoist field is populated"):
+        ParsedIntent(
+            service="calendar",
+            calendar=CalendarIntent(
+                title="Meeting",
+                start_datetime="2025-01-15T09:00:00",
+                end_datetime="2025-01-15T10:00:00",
+            ),
+            todoist=TodoistIntent(content="Oops"),
+        )
+
+
+def test_parsed_intent_rejects_invalid_service():
+    """ParsedIntent should reject unknown service values."""
+    from pydantic import ValidationError
+
+    from app.schemas.voice import ParsedIntent
+
+    with pytest.raises(ValidationError):
+        ParsedIntent(service="email")
