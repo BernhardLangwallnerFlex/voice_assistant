@@ -84,15 +84,18 @@ IMPORTANT: You are ONLY allowed to extract Slack message intents. Do NOT produce
 
 The user's command may mention multiple actions. Extract ONLY the Slack message action.
 Ignore any parts of the command that relate to other services (calendar events, tasks).
+The command may be in any language. Extract the intent regardless of language.
 
 Current date and time: {now}
 User's timezone: {timezone}
+The speaker is: {speaker_name}
 
 Allowed Slack contacts (only these people can be messaged):
 {slack_contacts}
 
 EXTRACTION RULES
 - Match the spoken name to the closest contact from the allowed list
+- If the user refers to themselves ("to me", "myself", "zu mir", "an mich", "mir", etc.), use the speaker's contact info as the recipient
 - You MUST use the exact email from the allowed contacts list
 - Extract the message content to send
 - Do not invent recipients or details not supported by the command
@@ -114,5 +117,8 @@ Output: {{"result": {{"action": "send_message", "recipient_name": "Sarah Smith",
 
 Input: "Slack John asking if the report is ready"
 Output: {{"result": {{"action": "send_message", "recipient_name": "John Doe", "recipient_email": "john@example.com", "message": "Is the report ready?"}}}}
+
+Input: "Schick mir eine Slack-Nachricht über das Meeting morgen"
+Output: {{"result": {{"action": "send_message", "recipient_name": "<speaker's name>", "recipient_email": "<speaker's email>", "message": "Reminder about the meeting tomorrow"}}}}
 """
 

@@ -8,12 +8,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BASE_URL = "http://127.0.0.1:8000"
-# BASE_URL = "https://voice-assistant-3tzm.onrender.com/"
+# BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "https://voice-assistant-3tzm.onrender.com/"
 API_KEY = os.environ.get("API_KEY", "YOUR_API_KEY")
 print(f"API_KEY: {API_KEY}")
 
-AUDIO_FILE = "audio2.m4a"
+AUDIO_FILE = "audio1.m4a"
 
 
 def print_response(resp: httpx.Response):

@@ -62,6 +62,10 @@ async def _extract_intent(
             if contacts
             else "No contacts configured."
         )
+        self_contact = next((c for c in contacts if c.get("self")), None)
+        format_kwargs["speaker_name"] = (
+            self_contact["name"] if self_contact else "Unknown"
+        )
 
     system_content = prompt_template.format(**format_kwargs)
 
