@@ -37,7 +37,7 @@ async def transcribe_audio(
     try:
         with open(file_path, "rb") as audio_file:
             response = await client.audio.transcriptions.create(
-                model="whisper-1",
+                model="gpt-4o-transcribe",
                 file=audio_file,
                 **({"language": language} if language else {}),
             )
