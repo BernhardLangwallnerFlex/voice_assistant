@@ -9,7 +9,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # BASE_URL = "http://127.0.0.1:8000"
-BASE_URL = "https://voice-assistant-3tzm.onrender.com/"
+# BASE_URL = "https://voice-assistant-3tzm.onrender.com/"
+BASE_URL = "https://voice-assistant.livelyplant-1884f397.germanywestcentral.azurecontainerapps.io"
 API_KEY = os.environ.get("API_KEY", "YOUR_API_KEY")
 print(f"API_KEY: {API_KEY}")
 

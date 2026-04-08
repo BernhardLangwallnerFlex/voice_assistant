@@ -8,11 +8,14 @@ from app.services.slack_messenger import SlackMessenger
 async def handle_slack_action(intent: SlackIntent) -> VoiceResponse:
     settings = get_settings()
 
-    if not settings.slack_bot_token:
+    token = settings.slack_user_token if intent.as_user else settings.slack_bot_token
+    token_label = "Slack user token" if intent.as_user else "Slack bot token"
+
+    if not token:
         return VoiceResponse(
             status="error",
             service="slack",
-            message="Slack bot token not configured.",
+            message=f"{token_label} not configured.",
         )
 
     # Validate recipient is in the whitelist
@@ -25,7 +28,7 @@ async def handle_slack_action(intent: SlackIntent) -> VoiceResponse:
             message=f"Recipient '{intent.recipient_name}' is not in the allowed contacts list.",
         )
 
-    messenger = SlackMessenger(token=settings.slack_bot_token)
+    messenger = SlackMessenger(token=token)
 
     try:
         await asyncio.to_thread(

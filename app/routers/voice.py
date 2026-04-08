@@ -5,6 +5,7 @@ from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_db
+from app.models.command_log import CommandLog
 from app.models.user import User
 from app.schemas.voice import MultiVoiceResponse, VoiceRequest, VoiceResponse
 from app.services.llm import parse_voice_command
@@ -23,6 +24,8 @@ async def handle_voice(
 ):
     try:
         multi_intent = await parse_voice_command(request.text, user.timezone)
+        db.add(CommandLog(user_id=user.id, endpoint="voice", transcription=request.text))
+        await db.commit()
     except ValidationError as e:
         logger.error("LLM returned invalid JSON: %s", e)
         raise HTTPException(

@@ -26,3 +26,24 @@ __pycache__/
 .DS_Store
 
 users.txt
+
+*.m4a
+*.mp3
+*.wav
+*.aac
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.wmv
+*.flv
+*.gif
+
+audio1.m4a
+audio2.m4a
+
+db.txt
+
+audio_examples/
+old/

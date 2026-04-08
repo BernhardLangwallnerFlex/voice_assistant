@@ -33,6 +33,7 @@ class SlackIntent(BaseModel):
     recipient_name: str
     recipient_email: str
     message: str
+    as_user: bool = False
 
 
 class ParsedIntent(BaseModel):

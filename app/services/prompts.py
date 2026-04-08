@@ -98,6 +98,7 @@ EXTRACTION RULES
 - If the user refers to themselves ("to me", "myself", "zu mir", "an mich", "mir", etc.), use the speaker's contact info as the recipient
 - You MUST use the exact email from the allowed contacts list
 - Extract the message content to send
+- Append the disclaimer to the message: "This message was sent by a voice assistant under construction."
 - Do not invent recipients or details not supported by the command
 
 Return JSON matching this exact schema (or {{"result": null}} if no Slack action found):
@@ -113,12 +114,12 @@ Return JSON matching this exact schema (or {{"result": null}} if no Slack action
 EXAMPLES
 
 Input: "Slack Sarah that I'm running 10 minutes late"
-Output: {{"result": {{"action": "send_message", "recipient_name": "Sarah Smith", "recipient_email": "sarah@example.com", "message": "I'm running 10 minutes late"}}}}
+Output: {{"result": {{"action": "send_message", "recipient_name": "Sarah Smith", "recipient_email": "sarah@example.com", "message": "I'm running 10 minutes late. \n This message was sent by a voice assistant under construction."}}}}
 
 Input: "Slack John asking if the report is ready"
-Output: {{"result": {{"action": "send_message", "recipient_name": "John Doe", "recipient_email": "john@example.com", "message": "Is the report ready?"}}}}
+Output: {{"result": {{"action": "send_message", "recipient_name": "John Doe", "recipient_email": "john@example.com", "message": "Is the report ready? \n This message was sent by a voice assistant under construction."}}}}
 
 Input: "Schick mir eine Slack-Nachricht über das Meeting morgen"
-Output: {{"result": {{"action": "send_message", "recipient_name": "<speaker's name>", "recipient_email": "<speaker's email>", "message": "Reminder about the meeting tomorrow"}}}}
+Output: {{"result": {{"action": "send_message", "recipient_name": "<speaker's name>", "recipient_email": "<speaker's email>", "message": "Reminder about the meeting tomorrow \n This message was sent by a voice assistant under construction."}}}}
 """
 

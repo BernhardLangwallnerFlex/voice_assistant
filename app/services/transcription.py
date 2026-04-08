@@ -8,6 +8,12 @@ from app.config import get_settings
 
 logger = logging.getLogger(__name__)
 
+# Domain-specific terms to bias transcription toward correct spellings.
+# The transcription model uses this as a conditioning hint for ambiguous audio.
+TRANSCRIPTION_PROMPT = (
+    "Flex, Flex's, Omikron, Evex, Nitrado, 3C, Todoist, Mem, Simovative"
+)
+
 
 class TranscriptionResult(BaseModel):
     text: str
@@ -39,6 +45,7 @@ async def transcribe_audio(
             response = await client.audio.transcriptions.create(
                 model="gpt-4o-transcribe",
                 file=audio_file,
+                prompt=TRANSCRIPTION_PROMPT,
                 **({"language": language} if language else {}),
             )
 

@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, File, Form, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import get_db
+from app.models.command_log import CommandLog
 from app.models.user import User
 from app.schemas.voice_command import VoiceCommandResponse
 from app.services.voice_command import VoiceCommandService
@@ -45,6 +46,10 @@ async def create_voice_command(
         locale=locale,
         db=db,
     )
+
+    if response.transcript:
+        db.add(CommandLog(user_id=user.id, endpoint="voice_command", transcription=response.transcript))
+        await db.commit()
 
     logger.info(
         "voice_command completed: request_id=%s user_id=%s mode=%s ok=%s "

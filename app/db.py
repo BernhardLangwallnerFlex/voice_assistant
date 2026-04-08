@@ -9,6 +9,7 @@ def _get_async_url() -> str:
     url = get_settings().database_url
     if url.startswith("postgresql://"):
         url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    url = url.replace("sslmode=", "ssl=")
     return url
 
 
